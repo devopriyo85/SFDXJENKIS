@@ -4,11 +4,11 @@ import groovy.json.JsonSlurperClassic
 
 node {
 
-    def SF_CONSUMER_KEY=env.SF_CONSUMER_KEY
-    def SF_USERNAME=env.SF_USERNAME
+    def SF_CONSUMER_KEY='3MVG9QV5z8XnLDvw14MX3vRLCHO21RXvcIdHvaeHF4wfjyD2rxGNpa79ai_oWHg8DHbpMTZrBl8uFbKwKWWcL'                                     //env.CONNECTED_APP_CONSUMER_KEY_DH
+    def SF_USERNAME='devopriyo.seal@wise-narwhal-q99ij0.com' 
     def SERVER_KEY_CREDENTALS_ID=env.SERVER_KEY_CREDENTALS_ID
     def TEST_LEVEL='RunLocalTests'
-    def PACKAGE_NAME='0Ho1U000000CaUzSAK'
+    def PACKAGE_NAME='0Ho7S000000GmbRSAS'
     def PACKAGE_VERSION
     def SF_INSTANCE_URL = env.SF_INSTANCE_URL ?: "https://login.salesforce.com"
 
@@ -187,6 +187,14 @@ node {
                 rc = command "${toolbelt}/sfdx force:org:delete --targetusername installorg --noprompt"
                 if (rc != 0) {
                     error 'Salesforce package install scratch org deletion failed.'
+                }           
+            
+            }
+
+            stage('Install Package In Dev org') {
+                rc =bat returnStatus: true, script: "\"${toolbelt}/sfdx\" force:package:install --package ${PACKAGE_VERSION} --targetusername ${SF_USERNAME} --wait 10"
+                if (rc != 0) {
+                    error 'Salesforce package install failed.'
                 }
             }
         }
